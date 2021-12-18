@@ -1,5 +1,6 @@
 import validator from './validate';
 import initView from './view';
+import translater from './translater';
 
 const state = {
   form: {
@@ -44,7 +45,7 @@ const formStateLoading = (watched) => {
   };
 };
 
-export default () => {
+const app = () => {
   const watched = initView(state, elements);
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -64,3 +65,5 @@ export default () => {
     }
   });
 };
+
+export default () => translater.then(app);
