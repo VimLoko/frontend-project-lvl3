@@ -1,10 +1,16 @@
 import validator from './validate';
 import initView from './view';
-import translater from './translater';
+import translator from './translator';
+import requester from './requester';
+import parser from './parser';
+import checker from './checker';
 
 const state = {
   form: {
     status: 'filling',
+    error: null,
+    feeds: [],
+    posts: [],
     fields: {
       url: {
         valid: true,
@@ -21,28 +27,14 @@ const elements = {
   errorText: document.getElementById('error-text'),
 };
 
-const formStateFilling = (watched) => {
-  watched.form.status = 'filling';
-  watched.form.fields.url = {
-    valid: true,
-    error: null,
-  };
-};
-
-const formStateError = (watched, error) => {
+const formValidateError = (watched, error) => {
   watched.form.status = 'failed';
-  watched.form.fields.url = {
-    valid: false,
-    error: error.message,
-  };
+  watched.form.error = error.message;
 };
 
-const formStateLoading = (watched) => {
-  watched.form.status = 'loading';
-  watched.form.fields.url = {
-    valid: true,
-    error: null,
-  };
+const formNetworkError = (watched, error) => {
+  watched.form.status = 'failed';
+  watched.form.error = error.message;
 };
 
 const app = () => {
@@ -50,20 +42,25 @@ const app = () => {
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     const targetForm = e.target;
-    if (targetForm) {
-      const formData = new FormData(targetForm);
-      const url = formData.get('url').trim();
-      validator(url)
-        .then((validatedData) => {
-          formStateLoading(watched);
-          formStateFilling(watched);
-          console.log(validatedData);
-        })
-        .catch((error) => {
-          formStateError(watched, error);
-        });
-    }
+    const formData = new FormData(targetForm);
+    const url = formData.get('url').trim();
+    validator(url)
+      .then((validatedData) => {
+        // formStateLoading(watched);
+        // formStateFilling(watched);
+        requester.get(`${validatedData.url}`)
+          .then((response) => response.data.contents)
+          .then((data) => {
+            const { feed, posts } = parser(data);
+            watched.form.feeds.unshift({ ...feed, url: validatedData.url });
+            watched.form.posts.unshift(...posts);
+            checker(watched);
+          })
+          .catch((error) => formNetworkError(watched, error));
+      }).catch((error) => {
+        formValidateError(watched, error);
+      });
   });
 };
 
-export default () => translater.then(app);
+export default () => translator.then(app);

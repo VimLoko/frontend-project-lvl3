@@ -33,9 +33,20 @@ const renderFormErrors = (form, elements) => {
   }
 };
 
+const renderRequestErrors = (form, elements) => {
+  const formError = form.error;
+  console.log(formError);
+  if (!formError) {
+    elements.errorText.textContent = '';
+  } else {
+    elements.errorText.textContent = formError;
+  }
+};
+
 const initView = (state, elements) => {
   const mapping = {
     'form.status': () => renderForm(state.form, elements),
+    'form.error': () => renderRequestErrors(state.form, elements),
     'form.fields.url': () => renderFormErrors(state.form, elements),
   };
   const watchedState = onChange(state, (path) => {
