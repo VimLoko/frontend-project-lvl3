@@ -92,4 +92,4 @@ const app = () => {
   });
 };
 
-export default () => translator.then(app);
+export default () => '';
