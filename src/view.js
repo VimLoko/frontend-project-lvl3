@@ -3,16 +3,21 @@ import onChange from 'on-change';
 const renderForm = (form, elements) => {
   switch (form.status) {
     case 'failed':
-      elements.btn.removeAttribute('disabled');
-      elements.input.removeAttribute('disabled');
+      elements.btn.removeAttribute('readonly');
+      elements.input.removeAttribute('readonly');
       elements.errorText.classList.remove('text-success');
       elements.errorText.classList.add('text-danger');
       elements.input.select();
       break;
 
+    case 'process':
+      elements.btn.setAttribute('readonly', true);
+      elements.input.setAttribute('readonly', true);
+      break;
+
     case 'success':
-      elements.btn.removeAttribute('disabled');
-      elements.input.removeAttribute('disabled');
+      elements.btn.removeAttribute('readonly');
+      elements.input.removeAttribute('readonly');
       elements.errorText.classList.remove('text-danger');
       elements.errorText.classList.add('text-success');
       elements.input.value = '';
