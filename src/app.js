@@ -22,14 +22,14 @@ const state = {
   },
 };
 
-const elements = {
+const elements = () => ({
   form: document.getElementById('form-rss'),
   input: document.getElementById('url-input'),
   btn: document.getElementById('btn-submit'),
   errorText: document.getElementById('error-text'),
   posts: document.querySelector('.posts'),
   feeds: document.querySelector('.feeds'),
-};
+});
 
 const formValidateError = (watched, error) => {
   watched.form.status = 'failed';
@@ -47,8 +47,9 @@ const formSuccessAdd = (watched, t) => {
 };
 
 const app = (t) => {
-  const watched = initView(state, elements, t);
-  elements.form.addEventListener('submit', (e) => {
+  const el = elements();
+  const watched = initView(state, el, t);
+  el.form.addEventListener('submit', (e) => {
     e.preventDefault();
     const targetForm = e.target;
     const formData = new FormData(targetForm);
@@ -70,7 +71,7 @@ const app = (t) => {
         formValidateError(watched, error);
       });
   });
-  elements.posts.addEventListener('click', (e) => {
+  el.posts.addEventListener('click', (e) => {
     e.preventDefault();
     const { target } = e;
     if (target && target.nodeName === 'BUTTON') {
