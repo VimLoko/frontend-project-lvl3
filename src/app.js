@@ -53,7 +53,8 @@ const app = () => {
     const targetForm = e.target;
     const formData = new FormData(targetForm);
     const url = formData.get('url').trim();
-    validator(url, watched)
+    const rssLinks = watched.form.feeds.map((feed) => feed.url);
+    validator(url, rssLinks)
       .then((validatedData) => {
         // formStateLoading(watched);
         // formStateFilling(watched);

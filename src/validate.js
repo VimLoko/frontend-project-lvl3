@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import { setLocale } from 'yup';
 import i18next from 'i18next';
 
-export default (url, watched) => {
+export default (url, rssLinks) => {
   setLocale({
     string: {
       required: i18next.t('errors.urlIsRequired'),
@@ -12,7 +12,6 @@ export default (url, watched) => {
       notOneOf: i18next.t('errors.urlAlreadyExists'),
     },
   });
-  const rssLinks = watched.form.feeds.map((feed) => feed.url);
   const schema = yup.object().shape({
     url: yup.string().required().url().notOneOf(rssLinks),
   });
