@@ -1,5 +1,4 @@
 import onChange from 'on-change';
-import i18next from 'i18next';
 
 const renderForm = (form, elements) => {
   switch (form.status) {
@@ -63,7 +62,7 @@ const renderFeeds = (form, elements) => {
   elements.feeds.innerHTML = feedHtml;
 };
 
-const renderPosts = (form, elements) => {
+const renderPosts = (form, elements, t) => {
   let postHtml = `
   <div class="card border-0">
     <div class="card-body"><h2 class="card-title h4">Посты</h2></div>
@@ -77,7 +76,7 @@ const renderPosts = (form, elements) => {
       <a href="${post.link}" class="${form.viewedPosts.includes(post.id) ? 'fw-normal' : 'fw-bold'}" data-id="${post.id}" target="_blank" 
         rel="noopener noreferrer">${post.title}</a>
       <button type="button" class="btn btn-outline-primary btn-sm" data-id="${post.id}"
-              data-bs-toggle="modal" data-bs-target="#modal">${i18next.t('ui.btnView')}
+              data-bs-toggle="modal" data-bs-target="#modal">${t('ui.btnView')}
       </button>
     </li>
     `;
@@ -86,13 +85,13 @@ const renderPosts = (form, elements) => {
   elements.posts.innerHTML = postHtml;
 };
 
-const initView = (state, elements) => {
+const initView = (state, elements, t) => {
   const mapping = {
     'form.status': () => renderForm(state.form, elements),
     'form.error': () => renderRequestErrors(state.form, elements),
     'form.fields.url': () => renderFormErrors(state.form, elements),
-    'form.posts': () => renderPosts(state.form, elements),
-    'form.viewedPosts': () => renderPosts(state.form, elements),
+    'form.posts': () => renderPosts(state.form, elements, t),
+    'form.viewedPosts': () => renderPosts(state.form, elements, t),
     'form.feeds': () => renderFeeds(state.form, elements),
   };
   const watchedState = onChange(state, (path) => {

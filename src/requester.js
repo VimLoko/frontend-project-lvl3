@@ -9,9 +9,9 @@ export default {
     timeoutErrorMessage: i18next.t('errors.timeoutErrorMessage'),
   }),
 
-  get(url) {
+  get(url, t) {
     return this.client.get(`get?disableCache=true&url=${encodeURIComponent(url)}`).catch(() => {
-      throw new Error(i18next.t('errors.timeoutErrorMessage'));
+      throw new Error(t('errors.timeoutErrorMessage'));
     });
   },
 };

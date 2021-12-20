@@ -1,15 +1,14 @@
 import * as yup from 'yup';
 import { setLocale } from 'yup';
-import i18next from 'i18next';
 
-export default (url, rssLinks) => {
+export default (url, t, rssLinks) => {
   setLocale({
     string: {
-      required: i18next.t('errors.urlIsRequired'),
-      url: i18next.t('errors.urlNotValid'),
+      required: t('errors.urlIsRequired'),
+      url: t('errors.urlNotValid'),
     },
     mixed: {
-      notOneOf: i18next.t('errors.rssAlreadyExists'),
+      notOneOf: t('errors.rssAlreadyExists'),
     },
   });
   const schema = yup.object().shape({

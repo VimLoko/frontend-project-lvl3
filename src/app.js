@@ -1,5 +1,4 @@
 import { find } from 'lodash';
-import i18next from 'i18next';
 import validator from './validate';
 import initView from './view';
 import translator from './translator';
@@ -42,29 +41,29 @@ const formNetworkError = (watched, error) => {
   watched.form.error = error.message;
 };
 
-const formSuccessAdd = (watched) => {
+const formSuccessAdd = (watched, t) => {
   watched.form.status = 'success';
-  watched.form.error = i18next.t('messages.rssSuccess');
+  watched.form.error = t('messages.rssSuccess');
 };
 
-const app = () => {
-  const watched = initView(state, elements);
+const app = (t) => {
+  const watched = initView(state, elements, t);
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     const targetForm = e.target;
     const formData = new FormData(targetForm);
     const url = formData.get('url').trim();
     const rssLinks = watched.form.feeds.map((feed) => feed.url);
-    validator(url, rssLinks)
+    validator(url, t, rssLinks)
       .then((validatedData) => {
-        requester.get(`${validatedData.url}`)
+        requester.get(`${validatedData.url}`, t)
           .then((response) => response.data.contents)
           .then((data) => {
-            const { feed, posts } = parser(data);
+            const { feed, posts } = parser(data, t);
             watched.form.feeds.unshift({ ...feed, url: validatedData.url });
             watched.form.posts.unshift(...posts);
-            formSuccessAdd(watched);
-            setTimeout(() => checker(watched), 5000);
+            formSuccessAdd(watched, t);
+            setTimeout(() => checker(watched, t), 5000);
           })
           .catch((error) => formNetworkError(watched, error));
       }).catch((error) => {
@@ -92,4 +91,6 @@ const app = () => {
   });
 };
 
-export default () => '';
+export default () => translator.then((t) => {
+  app(t);
+});

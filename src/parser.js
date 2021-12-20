@@ -1,12 +1,11 @@
-import i18next from 'i18next';
 import { v4 as uuidv4 } from 'uuid';
 
-export default (xml) => {
+export default (xml, t) => {
   const domParser = new DOMParser();
   const xmlParser = domParser.parseFromString(xml, 'application/xml');
   const errorXML = xmlParser.querySelector('parsererror');
   if (errorXML) {
-    throw new Error(i18next.t('errors.parsingError'));
+    throw new Error(t('errors.parsingError'));
   }
   const feed = {
     link: xmlParser.querySelector('link').textContent.trim(),
