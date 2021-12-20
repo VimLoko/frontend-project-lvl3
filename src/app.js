@@ -1,3 +1,4 @@
+import { find } from 'lodash';
 import validator from './validate';
 import initView from './view';
 import translator from './translator';
@@ -11,6 +12,7 @@ const state = {
     error: null,
     feeds: [],
     posts: [],
+    viewedPosts: [],
     fields: {
       url: {
         valid: true,
@@ -25,6 +27,8 @@ const elements = {
   input: document.getElementById('url-input'),
   btn: document.getElementById('btn-submit'),
   errorText: document.getElementById('error-text'),
+  posts: document.querySelector('.posts'),
+  feeds: document.querySelector('.feeds'),
 };
 
 const formValidateError = (watched, error) => {
@@ -37,6 +41,11 @@ const formNetworkError = (watched, error) => {
   watched.form.error = error.message;
 };
 
+const formSuccessAdd = (watched) => {
+  watched.form.status = 'success';
+  watched.form.error = 'RSS успешно загружен';
+};
+
 const app = () => {
   const watched = initView(state, elements);
   elements.form.addEventListener('submit', (e) => {
@@ -44,7 +53,7 @@ const app = () => {
     const targetForm = e.target;
     const formData = new FormData(targetForm);
     const url = formData.get('url').trim();
-    validator(url)
+    validator(url, watched)
       .then((validatedData) => {
         // formStateLoading(watched);
         // formStateFilling(watched);
@@ -54,12 +63,32 @@ const app = () => {
             const { feed, posts } = parser(data);
             watched.form.feeds.unshift({ ...feed, url: validatedData.url });
             watched.form.posts.unshift(...posts);
-            checker(watched);
+            formSuccessAdd(watched);
+            setTimeout(() => checker(watched), 5000);
           })
           .catch((error) => formNetworkError(watched, error));
       }).catch((error) => {
         formValidateError(watched, error);
       });
+  });
+  elements.posts.addEventListener('click', (e) => {
+    e.preventDefault();
+    const { target } = e;
+    if (target && target.nodeName === 'BUTTON') {
+      const { id } = target.dataset;
+      const post = find(watched.form.posts, { id });
+      const modal = document.querySelector('.modal');
+      const body = modal.querySelector('.modal-body');
+      const title = modal.querySelector('.modal-header > h5');
+      const link = modal.querySelector('.btn-primary');
+
+      body.textContent = post.description;
+      title.textContent = post.title;
+      link.href = post.link;
+      if (!watched.form.viewedPosts.includes(id)) {
+        watched.form.viewedPosts.push(id);
+      }
+    }
   });
 };
 
