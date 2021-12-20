@@ -6,7 +6,7 @@ import requester from './requester';
 import parser from './parser';
 import checker from './checker';
 
-const state = {
+const getState = () => ({
   form: {
     status: 'filling',
     error: null,
@@ -20,7 +20,7 @@ const state = {
       },
     },
   },
-};
+});
 
 const elements = () => ({
   form: document.getElementById('form-rss'),
@@ -48,6 +48,7 @@ const formSuccessAdd = (watched, t) => {
 
 const app = (t) => {
   const el = elements();
+  const state = getState();
   const watched = initView(state, el, t);
   el.form.addEventListener('submit', (e) => {
     e.preventDefault();

@@ -34,7 +34,6 @@ const renderFormErrors = (form, elements) => {
 
 const renderRequestErrors = (form, elements) => {
   const formError = form.error;
-  console.log(formError);
   if (!formError) {
     elements.errorText.textContent = '';
   } else {
