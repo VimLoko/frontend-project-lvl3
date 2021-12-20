@@ -1,4 +1,5 @@
 import onChange from 'on-change';
+import i18next from 'i18next';
 
 const renderForm = (form, elements) => {
   switch (form.status) {
@@ -76,7 +77,7 @@ const renderPosts = (form, elements) => {
       <a href="${post.link}" class="${form.viewedPosts.includes(post.id) ? 'fw-normal' : 'fw-bold'}" data-id="${post.id}" target="_blank" 
         rel="noopener noreferrer">${post.title}</a>
       <button type="button" class="btn btn-outline-primary btn-sm" data-id="${post.id}"
-              data-bs-toggle="modal" data-bs-target="#modal">Просмотр
+              data-bs-toggle="modal" data-bs-target="#modal">${i18next.t('ui.btnView')}
       </button>
     </li>
     `;

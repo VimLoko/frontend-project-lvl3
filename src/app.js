@@ -1,4 +1,5 @@
 import { find } from 'lodash';
+import i18next from 'i18next';
 import validator from './validate';
 import initView from './view';
 import translator from './translator';
@@ -43,7 +44,7 @@ const formNetworkError = (watched, error) => {
 
 const formSuccessAdd = (watched) => {
   watched.form.status = 'success';
-  watched.form.error = 'RSS успешно загружен';
+  watched.form.error = i18next.t('messages.rssSuccess');
 };
 
 const app = () => {

@@ -9,7 +9,7 @@ export default (url, rssLinks) => {
       url: i18next.t('errors.urlNotValid'),
     },
     mixed: {
-      notOneOf: i18next.t('errors.urlAlreadyExists'),
+      notOneOf: i18next.t('errors.rssAlreadyExists'),
     },
   });
   const schema = yup.object().shape({
