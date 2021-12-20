@@ -57,8 +57,6 @@ const app = () => {
     const rssLinks = watched.form.feeds.map((feed) => feed.url);
     validator(url, rssLinks)
       .then((validatedData) => {
-        // formStateLoading(watched);
-        // formStateFilling(watched);
         requester.get(`${validatedData.url}`)
           .then((response) => response.data.contents)
           .then((data) => {

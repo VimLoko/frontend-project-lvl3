@@ -96,7 +96,6 @@ const initView = (state, elements) => {
     'form.feeds': () => renderFeeds(state.form, elements),
   };
   const watchedState = onChange(state, (path) => {
-    console.log(path);
     if (mapping[path]) {
       mapping[path]();
     }

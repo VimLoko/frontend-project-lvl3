@@ -3,7 +3,7 @@ import ru from './locales/ru';
 
 export default i18next.init({
   lng: 'ru',
-  debug: true,
+  debug: false,
   resources: {
     ru,
   },
